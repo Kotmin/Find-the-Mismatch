@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 @MainActor
 @Observable
 final class TimerViewModel {
@@ -36,11 +34,13 @@ final class TimerViewModel {
         isRunning = true
         timer?.invalidate()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.05, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.tick()
             }
         }
+        self.timer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     func restart() {
@@ -49,15 +49,15 @@ final class TimerViewModel {
         isRunning = false
         start()
     }
-    
-    func resetToFull() {
-            timer?.invalidate()
-            remainingTime = duration
-            isRunning = false
-        }
 
     func stop() {
         timer?.invalidate()
+        isRunning = false
+    }
+
+    func resetToFull() {
+        timer?.invalidate()
+        remainingTime = duration
         isRunning = false
     }
 
