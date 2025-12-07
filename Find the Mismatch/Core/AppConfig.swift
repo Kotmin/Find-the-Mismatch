@@ -9,7 +9,7 @@ import Foundation
 import CoreGraphics
 
 struct AppConfig {
-    static let defaultHearts = 4
+    static let defaultHearts = 5
     static let defaultRoundDuration: TimeInterval = 30
 
     static let minCardsPerRound: Int = 6
@@ -22,7 +22,7 @@ struct AppConfig {
     static let cardMaxWidth: CGFloat = 330
     static let cardAspectRatio: CGFloat = 1.2
 
-    static let maxFindMismatchCardsWithoutScroll: Int = 40
+    static let maxFindMismatchCardsWithoutScroll: Int = 20
     
     static let maxFindMismatchCards: Int = 60
 }
