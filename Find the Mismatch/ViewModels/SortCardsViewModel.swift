@@ -84,6 +84,8 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
                 generatedCards.append(card)
             }
         }
+        
+        generatedCards.shuffle()
 
         cards = generatedCards
         currentScore = 0
