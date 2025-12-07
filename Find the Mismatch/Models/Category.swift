@@ -12,4 +12,16 @@ enum Category: String, CaseIterable, Hashable {
     case food
     case objects
     case weather
+
+    case pirates
+    case science
+    case space
+    case emotions
+    case mafia
+    case vehicles
+
+    case music
+    case sports
+    case fantasy
+    case professions
 }
