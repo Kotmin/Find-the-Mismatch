@@ -33,6 +33,8 @@ final class RootViewModel {
         }
     }
     var shakeCounter: Int
+    var greenPulseCounter: Int
+
 
     init() {
         let initialMode = GameMode.findMismatch
@@ -77,6 +79,8 @@ final class RootViewModel {
         self.isShakeOnWrong = initialShake
         self.themeMode = initialTheme
         self.shakeCounter = 0
+        self.greenPulseCounter = 0
+
 
         self.timerViewModel.onCompleted = { [weak self] in
             self?.handleTimeUp()
@@ -100,11 +104,14 @@ final class RootViewModel {
 
         self.findMismatchViewModel.onExtraHeartEarned = { [weak self] in
             self?.updateHearts(by: 1)
+            self?.triggerGreenPulse()
         }
 
         self.sortCardsViewModel.onExtraHeartEarned = { [weak self] in
             self?.updateHearts(by: 1)
+            self?.triggerGreenPulse()
         }
+
     }
 
     func openMenu() {
@@ -169,6 +176,11 @@ final class RootViewModel {
     private func triggerShake() {
         shakeCounter += 1
     }
+    
+    private func triggerGreenPulse() {
+        greenPulseCounter += 1
+    }
+
 
     private func handleTimeUp() {
         if gameState.result == .inProgress {

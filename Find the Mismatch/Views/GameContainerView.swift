@@ -22,9 +22,10 @@ struct GameContainerView: View {
             }
             .pickerStyle(.segmented)
             .padding()
-
+            
+            
             contentView
-        }
+        }.greenBorderPulse(trigger: rootViewModel.greenPulseCounter)
     }
 
     @ViewBuilder
