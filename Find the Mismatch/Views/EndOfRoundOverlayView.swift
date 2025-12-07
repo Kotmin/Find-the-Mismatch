@@ -52,7 +52,7 @@ struct EndOfRoundOverlayView: View {
                     Button {
                         onRestart()
                     } label: {
-                        Text("Restart")
+                        Text("Once again?")
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 8)
                             .foregroundColor(.primary)
