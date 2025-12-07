@@ -20,8 +20,8 @@ struct CardView: View {
                 .minimumScaleFactor(0.7)
                 .allowsTightening(true)
         }
-        .padding()
-        .frame(minWidth: 60, minHeight: 80)
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(backgroundColor)
         .cornerRadius(12)
         .overlay(
