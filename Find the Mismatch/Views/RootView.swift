@@ -68,16 +68,27 @@ struct RootView: View {
         switch viewModel.screen {
         case .menu:
             return "Find the Mismatch"
+
         case .settings:
             return "Settings"
+
         case .game:
-            if viewModel.gameState.result == .inProgress {
-                return "Score: \(viewModel.currentScore)"
-            } else {
+            guard viewModel.gameState.result == .inProgress else {
                 return nil
+            }
+
+            let score = viewModel.currentScore
+            let streak = viewModel.currentStreaks[viewModel.activeMode] ?? 0
+
+            if streak > 0 {
+                let multiplier = 1 + streak
+                return "Score: \(score)  x\(multiplier)"
+            } else {
+                return "Score: \(score)"
             }
         }
     }
+
 
 
     private func colorSchemeForTheme(_ theme: ThemeMode) -> ColorScheme? {
