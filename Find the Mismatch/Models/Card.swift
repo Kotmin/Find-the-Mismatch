@@ -15,6 +15,7 @@ struct Card: Identifiable, Hashable {
     var isVisible: Bool
     var isHighlightedCorrect: Bool
     var isHighlightedIncorrect: Bool
+    var assignedCategory: Category?
 
     init(
         id: UUID = UUID(),
@@ -23,7 +24,8 @@ struct Card: Identifiable, Hashable {
         category: Category,
         isVisible: Bool = true,
         isHighlightedCorrect: Bool = false,
-        isHighlightedIncorrect: Bool = false
+        isHighlightedIncorrect: Bool = false,
+        assignedCategory: Category? = nil
     ) {
         self.id = id
         self.title = title
@@ -32,6 +34,6 @@ struct Card: Identifiable, Hashable {
         self.isVisible = isVisible
         self.isHighlightedCorrect = isHighlightedCorrect
         self.isHighlightedIncorrect = isHighlightedIncorrect
+        self.assignedCategory = assignedCategory
     }
 }
-

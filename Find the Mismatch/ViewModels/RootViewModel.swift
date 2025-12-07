@@ -69,6 +69,14 @@ final class RootViewModel {
         self.findMismatchViewModel.onRoundCompleted = { [weak self] result in
             self?.updateResult(result)
         }
+
+        self.sortCardsViewModel.onIncorrectSelection = { [weak self] in
+            self?.updateHearts(by: -1)
+        }
+
+        self.sortCardsViewModel.onRoundCompleted = { [weak self] result in
+            self?.updateResult(result)
+        }
     }
 
     func openMenu() {
