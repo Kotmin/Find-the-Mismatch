@@ -65,7 +65,11 @@ struct SortCardsView: View {
                                         zoneCount: zoneCount
                                     )
                                     let targetCategory = viewModel.zoneCategories[targetIndex]
-                                    dragOffsets[card.id] = .zero
+
+                                    withAnimation(.easeOut(duration: 0.15)) {
+                                        dragOffsets[card.id] = .zero
+                                    }
+
                                     viewModel.handleDrop(card: card, into: targetCategory)
                                 }
                         )
