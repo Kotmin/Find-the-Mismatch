@@ -11,10 +11,21 @@ struct FindMismatchView: View {
     var viewModel: FindMismatchViewModel
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 12) {
+        GeometryReader { geometry in
+            content(for: geometry.size)
+        }
+    }
+
+    private func content(for size: CGSize) -> some View {
+        let baseWidth = size.width / 4
+        let cardWidth = max(AppConfig.cardMinWidth, min(AppConfig.cardMaxWidth, baseWidth))
+        let cardHeight = cardWidth * AppConfig.cardAspectRatio
+
+        return ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: cardWidth))], spacing: 12) {
                 ForEach(viewModel.cards) { card in
                     CardView(card: card)
+                        .frame(width: cardWidth, height: cardHeight)
                         .onTapGesture {
                             viewModel.handleTap(on: card)
                         }
@@ -24,3 +35,4 @@ struct FindMismatchView: View {
         }
     }
 }
+

@@ -11,43 +11,31 @@ struct MenuView: View {
     var rootViewModel: RootViewModel
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Find the Mismatch?")
-                .font(.largeTitle)
-                .padding(.top, 32)
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Find the Mismatch?")
+                    .font(.largeTitle)
+                    .padding(.top, 32)
 
-            VStack(spacing: 16) {
-                modeRow(
-                    title: "Find the mismatch",
-                    mode: .findMismatch
-                )
+                VStack(spacing: 16) {
+                    modeRow(
+                        title: "Find the mismatch",
+                        mode: .findMismatch
+                    )
 
-                modeRow(
-                    title: "Sort the cards",
-                    mode: .sortCards
-                )
-            }
-            .padding(.horizontal)
+                    modeRow(
+                        title: "Sort the cards",
+                        mode: .sortCards
+                    )
 
-            Spacer()
-
-            Button {
-                rootViewModel.openSettings()
-            } label: {
-                HStack {
-                    Image(systemName: "gearshape")
-                    Text("Settings")
+                    // Future modes can be added here
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(16)
                 .padding(.horizontal)
-            }
 
-            Spacer(minLength: 16)
+                Spacer(minLength: 32)
+            }
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder

@@ -16,8 +16,10 @@ struct SortCardsView: View {
         GeometryReader { geometry in
             let zoneCount = max(viewModel.zoneCategories.count, 1)
             let zoneHeight = geometry.size.height / CGFloat(zoneCount)
-            let cardWidth = max(60, min(100, geometry.size.width / 4))
-            let cardHeight = cardWidth * 1.2
+
+            let baseWidth = geometry.size.width / 4
+            let cardWidth = max(AppConfig.cardMinWidth, min(AppConfig.cardMaxWidth, baseWidth))
+            let cardHeight = cardWidth * AppConfig.cardAspectRatio
 
             ZStack(alignment: .top) {
                 VStack(spacing: 0) {

@@ -19,6 +19,10 @@ struct RootView: View {
                         showsMenuButton: viewModel.screen == .game,
                         onMenuButtonTap: {
                             viewModel.openMenu()
+                        },
+                        showsSettingsButton: viewModel.screen == .menu,
+                        onSettingsButtonTap: {
+                            viewModel.openSettings()
                         }
                     )
 
