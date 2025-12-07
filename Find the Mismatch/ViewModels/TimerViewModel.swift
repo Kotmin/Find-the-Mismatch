@@ -49,6 +49,12 @@ final class TimerViewModel {
         isRunning = false
         start()
     }
+    
+    func resetToFull() {
+            timer?.invalidate()
+            remainingTime = duration
+            isRunning = false
+        }
 
     func stop() {
         timer?.invalidate()

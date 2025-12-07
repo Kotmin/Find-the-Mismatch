@@ -92,6 +92,7 @@ final class RootViewModel {
     }
 
     func openMenu() {
+        timerViewModel.resetToFull()
         screen = .menu
     }
 
