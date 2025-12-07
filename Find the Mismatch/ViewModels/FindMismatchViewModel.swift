@@ -46,7 +46,7 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
         }
 
         let allCategories = Array(Set(allDefinitions.map { $0.category })).shuffled()
-        let maxCategoryCount = min(4, allCategories.count)
+        let maxCategoryCount = max(4, allCategories.count)
         let minCategoryCount = min(2, maxCategoryCount)
         let categoryCount = Int.random(in: minCategoryCount...maxCategoryCount)
         let selectedCategories = Array(allCategories.prefix(categoryCount))
@@ -63,11 +63,13 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
         }
 
         let minCount = AppConfig.minCardsPerRound
+        let maxCount = min(availableCount, AppConfig.maxFindMismatchCards)
+
         let count: Int
-        if availableCount <= minCount {
-            count = availableCount
+        if maxCount <= minCount {
+            count = maxCount
         } else {
-            count = Int.random(in: minCount...availableCount)
+            count = Int.random(in: minCount...maxCount)
         }
 
         let selected = Array(definitions.prefix(count))
