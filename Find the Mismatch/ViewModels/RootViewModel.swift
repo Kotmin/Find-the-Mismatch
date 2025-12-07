@@ -21,6 +21,13 @@ final class RootViewModel {
     var sortCardsViewModel: SortCardsViewModel
     var menuViewModel: MenuViewModel
     var currentStreaks: [GameMode: Int]
+    var lastRoundScore: Int
+    var isShakeOnWrong: Bool {
+        didSet {
+            UserDefaults.standard.set(isShakeOnWrong, forKey: "settings_shakeOnWrong")
+        }
+    }
+    var shakeCounter: Int
 
     init() {
         let initialMode = GameMode.findMismatch
@@ -48,6 +55,8 @@ final class RootViewModel {
 
         let menuViewModel = MenuViewModel()
 
+        let initialShake = UserDefaults.standard.object(forKey: "settings_shakeOnWrong") as? Bool ?? true
+
         self.screen = .menu
         self.gameState = initialState
         self.activeMode = initialMode
@@ -57,13 +66,16 @@ final class RootViewModel {
         self.sortCardsViewModel = sortCardsViewModel
         self.menuViewModel = menuViewModel
         self.currentStreaks = [:]
+        self.lastRoundScore = 0
+        self.isShakeOnWrong = initialShake
+        self.shakeCounter = 0
 
         self.timerViewModel.onCompleted = { [weak self] in
             self?.handleTimeUp()
         }
 
         self.findMismatchViewModel.onIncorrectSelection = { [weak self] in
-            self?.updateHearts(by: -1)
+            self?.handleIncorrectSelection()
         }
 
         self.findMismatchViewModel.onRoundCompleted = { [weak self] result in
@@ -71,7 +83,7 @@ final class RootViewModel {
         }
 
         self.sortCardsViewModel.onIncorrectSelection = { [weak self] in
-            self?.updateHearts(by: -1)
+            self?.handleIncorrectSelection()
         }
 
         self.sortCardsViewModel.onRoundCompleted = { [weak self] result in
@@ -81,6 +93,10 @@ final class RootViewModel {
 
     func openMenu() {
         screen = .menu
+    }
+
+    func openSettings() {
+        screen = .settings
     }
 
     func startGame(mode: GameMode) {
@@ -126,6 +142,17 @@ final class RootViewModel {
         }
     }
 
+    private func handleIncorrectSelection() {
+        updateHearts(by: -1)
+        if isShakeOnWrong {
+            triggerShake()
+        }
+    }
+
+    private func triggerShake() {
+        shakeCounter += 1
+    }
+
     private func handleTimeUp() {
         if gameState.result == .inProgress {
             findMismatchViewModel.endRoundDueToTimeUp()
@@ -133,7 +160,6 @@ final class RootViewModel {
             updateResult(.timeUp)
         }
     }
-
 
     private func recordHighScoreIfNeeded(result: GameResult) {
         let score: Int
@@ -143,6 +169,8 @@ final class RootViewModel {
         case .sortCards:
             score = sortCardsViewModel.currentScore
         }
+
+        lastRoundScore = score
 
         var streak = currentStreaks[activeMode] ?? 0
         if result == .won {

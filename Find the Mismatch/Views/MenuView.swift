@@ -30,6 +30,22 @@ struct MenuView: View {
             .padding(.horizontal)
 
             Spacer()
+
+            Button {
+                rootViewModel.openSettings()
+            } label: {
+                HStack {
+                    Image(systemName: "gearshape")
+                    Text("Settings")
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(16)
+                .padding(.horizontal)
+            }
+
+            Spacer(minLength: 16)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

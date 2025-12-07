@@ -10,5 +10,6 @@ import Foundation
 enum RootScreen {
     case menu
     case game
+    case settings
 }
 
