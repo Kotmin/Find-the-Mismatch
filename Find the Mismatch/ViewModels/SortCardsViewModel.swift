@@ -36,43 +36,36 @@ final class SortCardsViewModel {
     }
 
     func generateInitialCards() {
-        let templates: [(String, String, Category)] = [
-            ("Dog", "🐶", .animals),
-            ("Cat", "🐱", .animals),
-            ("Mouse", "🐭", .animals),
-            ("Pizza", "🍕", .food),
-            ("Apple", "🍎", .food),
-            ("Burger", "🍔", .food),
-            ("Chair", "🪑", .objects),
-            ("Laptop", "💻", .objects),
-            ("Key", "🔑", .objects),
-            ("Sun", "☀️", .weather),
-            ("Cloud", "☁️", .weather),
-            ("Rainbow", "🌈", .weather)
-        ]
+        let categories = Category.allCases
+        let catalog = CardCatalog.shared
 
-        let allCategories = Category.allCases.shuffled()
-        let categoriesCount = Int.random(in: 2...min(3, allCategories.count))
-        let selectedCategories = Array(allCategories.prefix(categoriesCount))
+        zoneCategories = [nil] + categories
 
-        zoneCategories = [nil] + selectedCategories
+        var generatedCards: [Card] = []
 
-        let filtered = templates.filter { selectedCategories.contains($0.2) }.shuffled()
-        let minCount = 6
-        let maxCount = filtered.count
-        let count = max(minCount, min(maxCount, Int.random(in: minCount...maxCount)))
-        let selectedCards = Array(filtered.prefix(count))
+        for category in categories {
+            let definitions = catalog.definitions(for: category).shuffled()
+            if definitions.isEmpty {
+                continue
+            }
 
-        cards = selectedCards.map { item in
-            Card(
-                title: item.0,
-                emoji: item.1,
-                category: item.2
-            )
+            let maxPerCategory = AppConfig.sortCardsPerCategory
+            let count = min(maxPerCategory, definitions.count)
+            let selected = definitions.prefix(count)
+
+            for definition in selected {
+                let card = Card(
+                    title: definition.title,
+                    asset: definition.asset,
+                    category: definition.category
+                )
+                generatedCards.append(card)
+            }
         }
 
+        cards = generatedCards
         currentScore = 0
-        isRoundActive = true
+        isRoundActive = !cards.isEmpty
     }
 
     func handleDrop(card: Card, into zoneCategory: Category?) {
@@ -118,4 +111,9 @@ final class SortCardsViewModel {
             onRoundCompleted?(.won)
         }
     }
+
+    func endRoundDueToTimeUp() {
+        isRoundActive = false
+    }
 }
+

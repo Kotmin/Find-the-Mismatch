@@ -10,4 +10,8 @@ import Foundation
 struct AppConfig {
     static let defaultHearts = 4
     static let defaultRoundDuration: TimeInterval = 30
+    
+    static let minCardsPerRound = 6
+
+    static let sortCardsPerCategory = 3
 }

@@ -16,6 +16,8 @@ struct SortCardsView: View {
         GeometryReader { geometry in
             let zoneCount = max(viewModel.zoneCategories.count, 1)
             let zoneHeight = geometry.size.height / CGFloat(zoneCount)
+            let cardWidth = max(60, min(100, geometry.size.width / 4))
+            let cardHeight = cardWidth * 1.2
 
             ZStack(alignment: .top) {
                 VStack(spacing: 0) {
@@ -27,11 +29,17 @@ struct SortCardsView: View {
                 }
 
                 ForEach(viewModel.cards) { card in
-                    let zoneIndex = zoneIndex(for: card)
-                    let position = position(for: card, in: geometry.size, zoneIndex: zoneIndex, zoneHeight: zoneHeight)
+                    let zoneIndex = zoneIndexForCard(card)
+                    let position = position(
+                        for: card,
+                        in: geometry.size,
+                        zoneIndex: zoneIndex,
+                        zoneHeight: zoneHeight,
+                        cardSize: CGSize(width: cardWidth, height: cardHeight)
+                    )
 
                     CardView(card: card)
-                        .frame(width: 90, height: 120)
+                        .frame(width: cardWidth, height: cardHeight)
                         .position(position)
                         .offset(dragOffsets[card.id] ?? .zero)
                         .gesture(
@@ -41,7 +49,11 @@ struct SortCardsView: View {
                                 }
                                 .onEnded { value in
                                     let location = value.location
-                                    let targetIndex = targetZoneIndex(for: location, zoneHeight: zoneHeight, zoneCount: zoneCount)
+                                    let targetIndex = targetZoneIndex(
+                                        for: location,
+                                        zoneHeight: zoneHeight,
+                                        zoneCount: zoneCount
+                                    )
                                     let targetCategory = viewModel.zoneCategories[targetIndex]
                                     dragOffsets[card.id] = .zero
                                     viewModel.handleDrop(card: card, into: targetCategory)
@@ -53,7 +65,7 @@ struct SortCardsView: View {
         }
     }
 
-    private func zoneIndex(for card: Card) -> Int {
+    private func zoneIndexForCard(_ card: Card) -> Int {
         if let assigned = card.assignedCategory,
            let index = viewModel.zoneCategories.firstIndex(where: { $0 == assigned }) {
             return index
@@ -62,24 +74,38 @@ struct SortCardsView: View {
         }
     }
 
-    private func position(for card: Card, in size: CGSize, zoneIndex: Int, zoneHeight: CGFloat) -> CGPoint {
-        let index = viewModel.cards.firstIndex(where: { $0.id == card.id }) ?? 0
-        let columns = 3
-        let column = index % columns
-        let row = index / columns
+    private func position(
+        for card: Card,
+        in size: CGSize,
+        zoneIndex: Int,
+        zoneHeight: CGFloat,
+        cardSize: CGSize
+    ) -> CGPoint {
+        let cardsInZone = viewModel.cards.filter { zoneIndexForCard($0) == zoneIndex }
+        guard let localIndex = cardsInZone.firstIndex(where: { $0.id == card.id }) else {
+            return CGPoint(x: size.width / 2, y: zoneHeight / 2)
+        }
+
+        let columns = max(2, Int(size.width / (cardSize.width * 1.3)))
+        let column = localIndex % columns
+        let row = localIndex / columns
 
         let horizontalSpacing = size.width / CGFloat(columns + 1)
         let x = horizontalSpacing * CGFloat(column + 1)
 
         let zoneTop = CGFloat(zoneIndex) * zoneHeight
-        let zoneCenterY = zoneTop + zoneHeight * 0.5
-        let y = zoneCenterY + CGFloat(row) * 10
+        let verticalSpacing: CGFloat = cardSize.height * 0.2
+        let y = zoneTop + cardSize.height / 2 + CGFloat(row) * (cardSize.height + verticalSpacing)
 
-        return CGPoint(x: x, y: y)
+        let maxY = zoneTop + zoneHeight - cardSize.height / 2
+        let clampedY = min(y, maxY)
+
+        return CGPoint(x: x, y: clampedY)
     }
 
     private func targetZoneIndex(for location: CGPoint, zoneHeight: CGFloat, zoneCount: Int) -> Int {
-        let rawIndex = Int(location.y / max(zoneHeight, 1))
+        let safeHeight = zoneHeight > 0 ? zoneHeight : 1
+        let rawIndex = Int(location.y / safeHeight)
         return min(max(rawIndex, 0), zoneCount - 1)
     }
 
@@ -101,4 +127,3 @@ struct SortCardsView: View {
         return colors[colorIndex].opacity(0.6)
     }
 }
-

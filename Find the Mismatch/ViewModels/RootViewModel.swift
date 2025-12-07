@@ -128,9 +128,12 @@ final class RootViewModel {
 
     private func handleTimeUp() {
         if gameState.result == .inProgress {
+            findMismatchViewModel.endRoundDueToTimeUp()
+            sortCardsViewModel.endRoundDueToTimeUp()
             updateResult(.timeUp)
         }
     }
+
 
     private func recordHighScoreIfNeeded(result: GameResult) {
         let score: Int

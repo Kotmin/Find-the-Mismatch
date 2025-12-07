@@ -12,8 +12,7 @@ struct CardView: View {
 
     var body: some View {
         VStack {
-            Text(card.emoji)
-                .font(.largeTitle)
+            assetView
             Text(card.title)
                 .font(.caption)
         }
@@ -21,10 +20,28 @@ struct CardView: View {
         .frame(minWidth: 60, minHeight: 80)
         .background(backgroundColor)
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(borderColor, lineWidth: 2)
+        )
         .opacity(card.isVisible ? 1 : 0)
-        .animation(.easeInOut(duration: 0.3), value: card.isVisible)
-        .animation(.easeInOut(duration: 3), value: card.isHighlightedCorrect)
-        .animation(.easeInOut(duration: 3), value: card.isHighlightedIncorrect)
+        .animation(.easeInOut(duration: 0.2), value: card.isVisible)
+        .animation(.easeInOut(duration: 0.2), value: card.isHighlightedCorrect)
+        .animation(.easeInOut(duration: 0.2), value: card.isHighlightedIncorrect)
+    }
+
+    @ViewBuilder
+    private var assetView: some View {
+        switch card.asset {
+        case .emoji(let value):
+            Text(value)
+                .font(.largeTitle)
+        case .image(let name):
+            Image(name)
+                .resizable()
+                .scaledToFit()
+                .frame(height: 40)
+        }
     }
 
     private var backgroundColor: Color {
@@ -34,6 +51,16 @@ struct CardView: View {
             return Color.red.opacity(0.7)
         } else {
             return Color.white
+        }
+    }
+
+    private var borderColor: Color {
+        if card.isHighlightedCorrect {
+            return .green
+        } else if card.isHighlightedIncorrect {
+            return .red
+        } else {
+            return .gray.opacity(0.4)
         }
     }
 }

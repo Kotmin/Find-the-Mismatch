@@ -10,7 +10,7 @@ import Foundation
 struct Card: Identifiable, Hashable {
     let id: UUID
     let title: String
-    let emoji: String
+    let asset: CardAsset
     let category: Category
     var isVisible: Bool
     var isHighlightedCorrect: Bool
@@ -20,7 +20,7 @@ struct Card: Identifiable, Hashable {
     init(
         id: UUID = UUID(),
         title: String,
-        emoji: String,
+        asset: CardAsset,
         category: Category,
         isVisible: Bool = true,
         isHighlightedCorrect: Bool = false,
@@ -29,7 +29,7 @@ struct Card: Identifiable, Hashable {
     ) {
         self.id = id
         self.title = title
-        self.emoji = emoji
+        self.asset = asset
         self.category = category
         self.isVisible = isVisible
         self.isHighlightedCorrect = isHighlightedCorrect

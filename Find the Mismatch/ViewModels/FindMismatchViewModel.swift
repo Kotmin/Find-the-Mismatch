@@ -36,32 +36,32 @@ final class FindMismatchViewModel {
     }
 
     func generateInitialCards() {
-        let templates: [(String, String, Category)] = [
-            ("Dog", "🐶", .animals),
-            ("Cat", "🐱", .animals),
-            ("Mouse", "🐭", .animals),
-            ("Pizza", "🍕", .food),
-            ("Apple", "🍎", .food),
-            ("Burger", "🍔", .food),
-            ("Chair", "🪑", .objects),
-            ("Laptop", "💻", .objects),
-            ("Key", "🔑", .objects),
-            ("Sun", "☀️", .weather),
-            ("Cloud", "☁️", .weather),
-            ("Rainbow", "🌈", .weather)
-        ]
+        let definitions = CardCatalog.shared.all.shuffled()
+        let availableCount = definitions.count
 
-        let shuffled = templates.shuffled()
-        let maxCount = shuffled.count
-        let minCount = 6
-        let count = max(minCount, Int.random(in: minCount...maxCount))
-        let selected = Array(shuffled.prefix(count))
+        if availableCount == 0 {
+            cards = []
+            targetCategory = nil
+            isRoundActive = false
+            correctSelectionsCount = 0
+            return
+        }
 
-        cards = selected.map { item in
+        let minCount = AppConfig.minCardsPerRound
+        let count: Int
+        if availableCount <= minCount {
+            count = availableCount
+        } else {
+            count = Int.random(in: minCount...availableCount)
+        }
+
+        let selected = Array(definitions.prefix(count))
+
+        cards = selected.map { definition in
             Card(
-                title: item.0,
-                emoji: item.1,
-                category: item.2
+                title: definition.title,
+                asset: definition.asset,
+                category: definition.category
             )
         }
 
@@ -109,5 +109,9 @@ final class FindMismatchViewModel {
             isRoundActive = false
             onRoundCompleted?(.won)
         }
+    }
+
+    func endRoundDueToTimeUp() {
+        isRoundActive = false
     }
 }
