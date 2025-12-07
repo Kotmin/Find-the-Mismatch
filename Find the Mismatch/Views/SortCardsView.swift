@@ -24,10 +24,8 @@ struct SortCardsView: View {
             )
 
             let maxHeightInZone = zoneHeight * 0.6
-//            let widthFromHeight = maxHeightInZone / AppConfig.cardAspectRatio
             let widthFromHeight = maxHeightInZone / (2.0 / 3.0)
             let cardWidth = min(widthFromScreen, widthFromHeight)
-//            let cardHeight = cardWidth * AppConfig.cardAspectRatio
             let cardHeight = cardWidth * (2.0 / 3.0)
             let cardSize = CGSize(width: cardWidth, height: cardHeight)
 
@@ -100,6 +98,37 @@ struct SortCardsView: View {
             return CGPoint(x: size.width / 2, y: zoneCenterY)
         }
 
+        let zoneTop = CGFloat(zoneIndex) * zoneHeight
+        let isLandscape = size.width > size.height
+
+        
+        if zoneIndex == 0, isLandscape, cardsInZone.count > 5 {
+            let pileCount = min(5, cardsInZone.count)
+            let pileIndex = localIndex % pileCount
+            let depthIndex = localIndex / pileCount
+
+            let totalWidth = size.width
+            let spacing: CGFloat = cardSize.width * 0.3
+            let layoutWidth = CGFloat(pileCount) * cardSize.width
+                + CGFloat(max(pileCount - 1, 0)) * spacing
+            let left = max(0, (totalWidth - layoutWidth) / 2)
+
+            let x = left
+                + cardSize.width / 2
+                + CGFloat(pileIndex) * (cardSize.width + spacing)
+
+            let zoneCenterY = zoneTop + zoneHeight / 2
+            let depthOffset = cardSize.height * 0.15
+            var y = zoneCenterY + CGFloat(depthIndex) * depthOffset
+
+            let bottomMargin = zoneHeight * 0.05
+            let maxY = zoneTop + zoneHeight - bottomMargin - cardSize.height / 2
+            y = min(y, maxY)
+
+            return CGPoint(x: x, y: y)
+        }
+
+        
         let columns = max(2, Int(size.width / (cardSize.width * 1.3)))
         let column = localIndex % columns
         let row = localIndex / columns
@@ -107,20 +136,22 @@ struct SortCardsView: View {
         let horizontalSpacing = size.width / CGFloat(columns + 1)
         let x = horizontalSpacing * CGFloat(column + 1)
 
-        let zoneTop = CGFloat(zoneIndex) * zoneHeight
         let verticalSpacing: CGFloat = cardSize.height * 0.2
         let baseOffset = zoneHeight * 0.05
 
-        let y = zoneTop
+        let yRaw = zoneTop
             + baseOffset
             + cardSize.height / 2
             + CGFloat(row) * (cardSize.height + verticalSpacing)
 
-        let maxY = zoneTop + zoneHeight - cardSize.height / 2
-        let clampedY = min(y, maxY)
+        let bottomMargin = zoneHeight * 0.05
+        let maxY = zoneTop + zoneHeight - bottomMargin - cardSize.height / 2
+        let y = min(yRaw, maxY)
 
-        return CGPoint(x: x, y: clampedY)
+        return CGPoint(x: x, y: y)
     }
+
+
 
     private func targetZoneIndex(for location: CGPoint, zoneHeight: CGFloat, zoneCount: Int) -> Int {
         let safeHeight = zoneHeight > 0 ? zoneHeight : 1
