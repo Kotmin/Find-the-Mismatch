@@ -36,14 +36,30 @@ final class SortCardsViewModel {
     }
 
     func generateInitialCards() {
-        let categories = Category.allCases
         let catalog = CardCatalog.shared
+        let allDefinitions = catalog.all
 
-        zoneCategories = [nil] + categories
+        let allCategories = Array(Set(allDefinitions.map { $0.category })).shuffled()
+        let availableCategoriesCount = allCategories.count
+
+        if availableCategoriesCount == 0 {
+            zoneCategories = [nil]
+            cards = []
+            currentScore = 0
+            isRoundActive = false
+            return
+        }
+
+        let minCategoryCount = 2
+        let maxCategoryCount = availableCategoriesCount
+        let categoryCount = Int.random(in: minCategoryCount...maxCategoryCount)
+        let selectedCategories = Array(allCategories.prefix(categoryCount))
+
+        zoneCategories = [nil] + selectedCategories
 
         var generatedCards: [Card] = []
 
-        for category in categories {
+        for category in selectedCategories {
             let definitions = catalog.definitions(for: category).shuffled()
             if definitions.isEmpty {
                 continue
@@ -67,6 +83,7 @@ final class SortCardsViewModel {
         currentScore = 0
         isRoundActive = !cards.isEmpty
     }
+
 
     func handleDrop(card: Card, into zoneCategory: Category?) {
         guard isRoundActive else { return }

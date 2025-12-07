@@ -36,7 +36,22 @@ final class FindMismatchViewModel {
     }
 
     func generateInitialCards() {
-        let definitions = CardCatalog.shared.all.shuffled()
+        let allDefinitions = CardCatalog.shared.all
+        if allDefinitions.isEmpty {
+            cards = []
+            targetCategory = nil
+            isRoundActive = false
+            correctSelectionsCount = 0
+            return
+        }
+
+        let allCategories = Array(Set(allDefinitions.map { $0.category })).shuffled()
+        let maxCategoryCount = min(4, allCategories.count)
+        let minCategoryCount = min(2, maxCategoryCount)
+        let categoryCount = Int.random(in: minCategoryCount...maxCategoryCount)
+        let selectedCategories = Array(allCategories.prefix(categoryCount))
+
+        let definitions = CardCatalog.shared.definitions(for: selectedCategories).shuffled()
         let availableCount = definitions.count
 
         if availableCount == 0 {
@@ -70,6 +85,7 @@ final class FindMismatchViewModel {
         isRoundActive = true
         correctSelectionsCount = 0
     }
+
 
     func handleTap(on card: Card) {
         guard isRoundActive else { return }
