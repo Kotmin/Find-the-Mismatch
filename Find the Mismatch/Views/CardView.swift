@@ -14,11 +14,13 @@ struct CardView: View {
         VStack {
             assetView
             Text(card.title)
-                .font(.caption)
+                .font(.footnote)
                 .foregroundColor(.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.6)
                 .allowsTightening(true)
+
         }
         .padding(8)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -39,15 +41,15 @@ struct CardView: View {
         switch card.asset {
         case .emoji(let value):
             Text(value)
-                .font(.largeTitle)
+                .font(.title)
                 .foregroundColor(.primary)
         case .image(let name):
             Image(name)
                 .resizable()
                 .scaledToFit()
-                .frame(height: 40)
         }
     }
+
 
     private var backgroundColor: Color {
         if card.isHighlightedCorrect {
