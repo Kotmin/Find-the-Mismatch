@@ -28,12 +28,13 @@ struct GreenBorderPulseEffect: ViewModifier {
                         .animation(.easeOut(duration: 0.25), value: isActive)
                 }
             )
-            .onChange(of: trigger) { _ in
+            .onChange(of: trigger) {
                 isActive = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                     isActive = false
                 }
             }
+
     }
 }
 
