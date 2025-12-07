@@ -13,7 +13,13 @@ struct RootView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                GameHeaderView(viewModel: viewModel.headerViewModel)
+                GameHeaderView(
+                    viewModel: viewModel.headerViewModel,
+                    showsMenuButton: viewModel.screen == .game,
+                    onMenuButtonTap: {
+                        viewModel.openMenu()
+                    }
+                )
 
                 switch viewModel.screen {
                 case .menu:
