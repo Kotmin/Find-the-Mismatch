@@ -8,6 +8,6 @@
 import Foundation
 
 struct AppConfig {
-    static let defaultHearts = 3
+    static let defaultHearts = 4
     static let defaultRoundDuration: TimeInterval = 30
 }
