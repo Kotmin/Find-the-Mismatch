@@ -215,4 +215,14 @@ final class RootViewModel {
             streak: streak
         )
     }
+    
+    var currentScore: Int {
+        switch activeMode {
+        case .findMismatch:
+            return findMismatchViewModel.correctSelectionsCount
+        case .sortCards:
+            return sortCardsViewModel.currentScore
+        }
+    }
+
 }

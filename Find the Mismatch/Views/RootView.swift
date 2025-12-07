@@ -71,9 +71,14 @@ struct RootView: View {
         case .settings:
             return "Settings"
         case .game:
-            return nil
+            if viewModel.gameState.result == .inProgress {
+                return "Score: \(viewModel.currentScore)"
+            } else {
+                return nil
+            }
         }
     }
+
 
     private func colorSchemeForTheme(_ theme: ThemeMode) -> ColorScheme? {
         switch theme {
