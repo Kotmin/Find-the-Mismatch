@@ -35,7 +35,6 @@ final class RootViewModel {
     var shakeCounter: Int
     var greenPulseCounter: Int
 
-
     init() {
         let initialMode = GameMode.findMismatch
         let initialState = gameEngine.initialGameState(for: initialMode)
@@ -81,7 +80,6 @@ final class RootViewModel {
         self.shakeCounter = 0
         self.greenPulseCounter = 0
 
-
         self.timerViewModel.onCompleted = { [weak self] in
             self?.handleTimeUp()
         }
@@ -111,7 +109,6 @@ final class RootViewModel {
             self?.updateHearts(by: 1)
             self?.triggerGreenPulse()
         }
-
     }
 
     func openMenu() {
@@ -176,11 +173,10 @@ final class RootViewModel {
     private func triggerShake() {
         shakeCounter += 1
     }
-    
+
     private func triggerGreenPulse() {
         greenPulseCounter += 1
     }
-
 
     private func handleTimeUp() {
         if gameState.result == .inProgress {
@@ -191,17 +187,20 @@ final class RootViewModel {
     }
 
     private func recordHighScoreIfNeeded(result: GameResult) {
-        let score: Int
+        let baseScore: Int
         switch activeMode {
         case .findMismatch:
-            score = findMismatchViewModel.correctSelectionsCount
+            baseScore = findMismatchViewModel.correctSelectionsCount
         case .sortCards:
-            score = sortCardsViewModel.currentScore
+            baseScore = sortCardsViewModel.currentScore
         }
 
-        lastRoundScore = score
+        let streakBefore = currentStreaks[activeMode] ?? 0
+        let effectiveScore = boostedScore(baseScore: baseScore, streak: streakBefore)
 
-        var streak = currentStreaks[activeMode] ?? 0
+        lastRoundScore = effectiveScore
+
+        var streak = streakBefore
         if result == .won {
             streak += 1
         } else {
@@ -211,12 +210,18 @@ final class RootViewModel {
 
         menuViewModel.updateHighScore(
             for: activeMode,
-            score: score,
+            score: effectiveScore,
             streak: streak
         )
     }
-    
+
     var currentScore: Int {
+        let base = currentBaseScore
+        let streak = currentStreaks[activeMode] ?? 0
+        return boostedScore(baseScore: base, streak: streak)
+    }
+
+    private var currentBaseScore: Int {
         switch activeMode {
         case .findMismatch:
             return findMismatchViewModel.correctSelectionsCount
@@ -225,4 +230,10 @@ final class RootViewModel {
         }
     }
 
+    private func boostedScore(baseScore: Int, streak: Int) -> Int {
+        if baseScore == 0 || streak == 0 {
+            return baseScore
+        }
+        return baseScore * (1 + streak)
+    }
 }
