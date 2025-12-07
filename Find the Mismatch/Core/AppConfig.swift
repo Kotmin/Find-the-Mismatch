@@ -25,4 +25,6 @@ struct AppConfig {
     static let maxFindMismatchCardsWithoutScroll: Int = 20
     
     static let maxFindMismatchCards: Int = 60
+    
+    static let extraHeartCorrectStreak = 3
 }

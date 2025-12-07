@@ -16,9 +16,11 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
     var targetCategory: Category?
     var isRoundActive: Bool
     var correctSelectionsCount: Int
+    var correctStreak: Int
 
     var onIncorrectSelection: (() -> Void)?
     var onRoundCompleted: ((GameResult) -> Void)?
+    var onExtraHeartEarned: (() -> Void)?
 
     init(timerViewModel: TimerViewModel) {
         self.timerViewModel = timerViewModel
@@ -26,6 +28,7 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
         self.targetCategory = nil
         self.isRoundActive = false
         self.correctSelectionsCount = 0
+        self.correctStreak = 0
         generateInitialCards()
     }
 
@@ -42,6 +45,7 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
             targetCategory = nil
             isRoundActive = false
             correctSelectionsCount = 0
+            correctStreak = 0
             return
         }
 
@@ -59,6 +63,7 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
             targetCategory = nil
             isRoundActive = false
             correctSelectionsCount = 0
+            correctStreak = 0
             return
         }
 
@@ -86,8 +91,8 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
         targetCategory = categoriesInRound.randomElement()
         isRoundActive = true
         correctSelectionsCount = 0
+        correctStreak = 0
     }
-
 
     func handleTap(on card: Card) {
         guard isRoundActive else { return }
@@ -104,13 +109,27 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
         if isCorrect {
             cards[index].isHighlightedCorrect = true
             correctSelectionsCount += 1
+            handleCorrectSelection()
             checkForRoundCompletion()
         } else {
             cards[index].isHighlightedIncorrect = true
+            handleIncorrectSelection()
             onIncorrectSelection?()
             let cardId = current.id
             scheduleIncorrectReset(for: cardId)
         }
+    }
+
+    private func handleCorrectSelection() {
+        correctStreak += 1
+        if correctStreak >= AppConfig.extraHeartCorrectStreak {
+            correctStreak = 0
+            onExtraHeartEarned?()
+        }
+    }
+
+    private func handleIncorrectSelection() {
+        correctStreak = 0
     }
 
     private func checkForRoundCompletion() {
@@ -123,6 +142,4 @@ final class FindMismatchViewModel: CardHighlightingRoundViewModel {
             onRoundCompleted?(.won)
         }
     }
-
-
 }

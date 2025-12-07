@@ -16,9 +16,11 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
     var zoneCategories: [Category?]
     var currentScore: Int
     var isRoundActive: Bool
+    var correctStreak: Int
 
     var onIncorrectSelection: (() -> Void)?
     var onRoundCompleted: ((GameResult) -> Void)?
+    var onExtraHeartEarned: (() -> Void)?
 
     init(timerViewModel: TimerViewModel) {
         self.timerViewModel = timerViewModel
@@ -26,6 +28,7 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
         self.zoneCategories = []
         self.currentScore = 0
         self.isRoundActive = false
+        self.correctStreak = 0
         generateInitialCards()
     }
 
@@ -47,6 +50,7 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
             cards = []
             currentScore = 0
             isRoundActive = false
+            correctStreak = 0
             return
         }
 
@@ -84,12 +88,13 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
                 generatedCards.append(card)
             }
         }
-        
+
         generatedCards.shuffle()
 
         cards = generatedCards
         currentScore = 0
         isRoundActive = !cards.isEmpty
+        correctStreak = 0
     }
 
     func handleDrop(card: Card, into zoneCategory: Category?) {
@@ -110,14 +115,28 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
             cards[index].isHighlightedCorrect = true
             cards[index].isHighlightedIncorrect = false
             currentScore += 1
+            handleCorrectSelection()
             checkForRoundCompletion()
         } else {
             cards[index].isHighlightedIncorrect = true
             cards[index].isHighlightedCorrect = false
+            handleIncorrectSelection()
             onIncorrectSelection?()
             let cardId = card.id
             scheduleIncorrectReset(for: cardId)
         }
+    }
+
+    private func handleCorrectSelection() {
+        correctStreak += 1
+        if correctStreak >= AppConfig.extraHeartCorrectStreak {
+            correctStreak = 0
+            onExtraHeartEarned?()
+        }
+    }
+
+    private func handleIncorrectSelection() {
+        correctStreak = 0
     }
 
     private func checkForRoundCompletion() {
@@ -130,5 +149,4 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
             onRoundCompleted?(.won)
         }
     }
-
 }
