@@ -13,10 +13,6 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text("Settings")
-                .font(.title)
-                .padding(.top, 24)
-
             Toggle(
                 "Shake on wrong answer",
                 isOn: Binding(
@@ -24,10 +20,11 @@ struct SettingsView: View {
                     set: { viewModel.isShakeOnWrong = $0 }
                 )
             )
+            .padding(.top, 24)
             .padding(.trailing)
-
+            
             Spacer()
-
+            
             Button {
                 viewModel.openMenu()
             } label: {
@@ -35,6 +32,8 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity)
             }
             .padding(.bottom, 24)
+        
+        
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

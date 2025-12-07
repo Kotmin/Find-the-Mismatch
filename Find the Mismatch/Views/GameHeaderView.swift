@@ -13,6 +13,7 @@ struct GameHeaderView: View {
     var onMenuButtonTap: (() -> Void)?
     var showsSettingsButton: Bool
     var onSettingsButtonTap: (() -> Void)?
+    var centerTitleOverride: String?
 
     var body: some View {
         VStack(spacing: 8) {
@@ -22,7 +23,7 @@ struct GameHeaderView: View {
 
                 Spacer()
 
-                Text(viewModel.statusText)
+                Text(centerTitleOverride ?? viewModel.statusText)
                     .font(.headline)
 
                 Spacer()

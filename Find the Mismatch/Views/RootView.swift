@@ -16,14 +16,15 @@ struct RootView: View {
                 VStack(spacing: 0) {
                     GameHeaderView(
                         viewModel: viewModel.headerViewModel,
-                        showsMenuButton: viewModel.screen == .game,
+                        showsMenuButton: viewModel.screen == .game || viewModel.screen == .settings,
                         onMenuButtonTap: {
                             viewModel.openMenu()
                         },
                         showsSettingsButton: viewModel.screen == .menu,
                         onSettingsButtonTap: {
                             viewModel.openSettings()
-                        }
+                        },
+                        centerTitleOverride: centerTitleForCurrentScreen()
                     )
 
                     switch viewModel.screen {
@@ -59,6 +60,17 @@ struct RootView: View {
                 )
             )
             .animation(.easeInOut(duration: 0.25), value: viewModel.shakeCounter)
+        }
+    }
+
+    private func centerTitleForCurrentScreen() -> String? {
+        switch viewModel.screen {
+        case .menu:
+            return "Find the Mismatch"
+        case .settings:
+            return "Settings"
+        case .game:
+            return nil
         }
     }
 }
