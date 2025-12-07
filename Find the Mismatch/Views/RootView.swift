@@ -41,10 +41,25 @@ struct RootView: View {
                 }
 
                 if viewModel.screen == .game,
+                   viewModel.gameState.result == .inProgress,
+                   let streak = viewModel.currentStreaks[viewModel.activeMode],
+                   streak > 0 {
+                    ComboMultiplierBadge(multiplier: 1 + streak)
+                        .padding(.top, 4)
+                        .padding(.trailing, 16)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .topTrailing
+                        )
+                }
+
+                if viewModel.screen == .game,
                    viewModel.gameState.result != .inProgress {
                     EndOfRoundOverlayView(
                         result: viewModel.gameState.result,
                         score: viewModel.lastRoundScore,
+                        detailText: endOfRoundDetailText(),
                         onRestart: {
                             viewModel.resetGame()
                         },
@@ -63,6 +78,7 @@ struct RootView: View {
         }
         .preferredColorScheme(colorSchemeForTheme(viewModel.themeMode))
     }
+
 
     private func centerTitleForCurrentScreen() -> String? {
         switch viewModel.screen {
@@ -88,6 +104,33 @@ struct RootView: View {
             }
         }
     }
+    
+    private func endOfRoundDetailText() -> String? {
+        let result = viewModel.gameState.result
+        guard result != .inProgress else { return nil }
+
+        switch viewModel.activeMode {
+        case .findMismatch:
+            if result == .won {
+                return nil
+            }
+            if let category = viewModel.findMismatchViewModel.targetCategory {
+                return "You were looking for: \(category.displayName)"
+            } else {
+                return nil
+            }
+
+        case .sortCards:
+            if result == .won {
+                return nil
+            }
+            let categories = viewModel.sortCardsViewModel.zoneCategories.compactMap { $0 }
+            guard !categories.isEmpty else { return nil }
+            let names = categories.map { $0.displayName }
+            let text = names.joined(separator: ", ")
+            return "Categories in this round: \(text)"
+        }
+    }
 
 
 
@@ -102,3 +145,42 @@ struct RootView: View {
         }
     }
 }
+
+struct ComboMultiplierBadge: View {
+    let multiplier: Int
+
+    @State private var scale: CGFloat = 1
+
+    var body: some View {
+        Text("x\(multiplier)")
+            .font(.caption.bold())
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color.green.opacity(0.9))
+            .foregroundColor(.white)
+            .cornerRadius(12)
+            .scaleEffect(scale)
+            .onAppear {
+                animate()
+            }
+            .onChange(of: multiplier) {
+                animate()
+            }
+    }
+
+    private func animate() {
+        scale = 1
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.5)) {
+            scale = 1.3
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                scale = 1
+            }
+        }
+    }
+    
+    
+
+}
+

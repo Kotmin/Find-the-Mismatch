@@ -10,6 +10,7 @@ import SwiftUI
 struct EndOfRoundOverlayView: View {
     let result: GameResult
     let score: Int
+    let detailText: String?
     let onRestart: () -> Void
     let onMainMenu: () -> Void
 
@@ -27,6 +28,14 @@ struct EndOfRoundOverlayView: View {
                 Text("Score: \(score)")
                     .font(.headline)
                     .foregroundColor(.primary)
+
+                if let detailText {
+                    Text(detailText)
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 4)
+                }
 
                 HStack(spacing: 16) {
                     Button {
