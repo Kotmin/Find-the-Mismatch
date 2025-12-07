@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class FindMismatchViewModel: GameModeRoundViewModel {
+final class FindMismatchViewModel: CardHighlightingRoundViewModel {
     let timerViewModel: TimerViewModel
 
     var cards: [Card]
@@ -107,12 +107,7 @@ final class FindMismatchViewModel: GameModeRoundViewModel {
             cards[index].isHighlightedIncorrect = true
             onIncorrectSelection?()
             let cardId = current.id
-            Task { @MainActor in
-                try? await Task.sleep(for: .seconds(3))
-                if let idx = cards.firstIndex(where: { $0.id == cardId }) {
-                    cards[idx].isHighlightedIncorrect = false
-                }
-            }
+            scheduleIncorrectReset(for: cardId)
         }
     }
 

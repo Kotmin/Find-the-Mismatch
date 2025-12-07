@@ -24,3 +24,20 @@ extension GameModeRoundViewModel {
         isRoundActive = false
     }
 }
+
+
+@MainActor
+protocol CardHighlightingRoundViewModel: GameModeRoundViewModel {
+    var cards: [Card] { get set }
+}
+
+extension CardHighlightingRoundViewModel {
+    func scheduleIncorrectReset(for cardId: UUID, seconds: TimeInterval = 3) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(seconds))
+            if let idx = cards.firstIndex(where: { $0.id == cardId }) {
+                cards[idx].isHighlightedIncorrect = false
+            }
+        }
+    }
+}

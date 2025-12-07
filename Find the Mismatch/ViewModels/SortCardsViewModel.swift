@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class SortCardsViewModel: GameModeRoundViewModel {
+final class SortCardsViewModel: CardHighlightingRoundViewModel {
     let timerViewModel: TimerViewModel
 
     var cards: [Card]
@@ -114,12 +114,7 @@ final class SortCardsViewModel: GameModeRoundViewModel {
             cards[index].isHighlightedCorrect = false
             onIncorrectSelection?()
             let cardId = card.id
-            Task { @MainActor in
-                try? await Task.sleep(for: .seconds(3))
-                if let idx = cards.firstIndex(where: { $0.id == cardId }) {
-                    cards[idx].isHighlightedIncorrect = false
-                }
-            }
+            scheduleIncorrectReset(for: cardId)
         }
     }
 
