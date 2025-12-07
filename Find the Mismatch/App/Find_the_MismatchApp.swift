@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct Find_the_MismatchApp: App {
+    @State private var rootViewModel = RootViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(viewModel: rootViewModel)
         }
     }
 }
