@@ -61,6 +61,7 @@ struct RootView: View {
             )
             .animation(.easeInOut(duration: 0.25), value: viewModel.shakeCounter)
         }
+        .preferredColorScheme(viewModel.isDarkModeEnabled ? .dark : nil)
     }
 
     private func centerTitleForCurrentScreen() -> String? {

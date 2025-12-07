@@ -5,7 +5,6 @@
 //  Created by Paweł Jan Tłusty on 07/12/2025.
 //
 
-
 import SwiftUI
 
 struct SettingsView: View {
@@ -22,18 +21,17 @@ struct SettingsView: View {
             )
             .padding(.top, 24)
             .padding(.trailing)
-            
+
+            Toggle(
+                "Dark mode",
+                isOn: Binding(
+                    get: { viewModel.isDarkModeEnabled },
+                    set: { viewModel.isDarkModeEnabled = $0 }
+                )
+            )
+            .padding(.trailing)
+
             Spacer()
-            
-            Button {
-                viewModel.openMenu()
-            } label: {
-                Text("Back to menu")
-                    .frame(maxWidth: .infinity)
-            }
-            .padding(.bottom, 24)
-        
-        
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
