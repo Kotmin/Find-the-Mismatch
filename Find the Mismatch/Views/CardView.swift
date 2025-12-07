@@ -16,6 +16,9 @@ struct CardView: View {
             Text(card.title)
                 .font(.caption)
                 .foregroundColor(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .allowsTightening(true)
         }
         .padding()
         .frame(minWidth: 60, minHeight: 80)

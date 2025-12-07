@@ -22,10 +22,11 @@ struct FindMismatchView: View {
         let cardHeight = cardWidth * AppConfig.cardAspectRatio
 
         return ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: cardWidth))], spacing: 12) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: cardWidth))], spacing: 0) {
                 ForEach(viewModel.cards) { card in
                     CardView(card: card)
-                        .frame(width: cardWidth, height: cardHeight)
+//                        .frame(width: cardWidth, height: cardHeight)
+                        .aspectRatio(2/3,contentMode: .fit)
                         .onTapGesture {
                             viewModel.handleTap(on: card)
                         }
