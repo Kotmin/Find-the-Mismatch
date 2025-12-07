@@ -20,6 +20,7 @@ final class RootViewModel {
     var findMismatchViewModel: FindMismatchViewModel
     var sortCardsViewModel: SortCardsViewModel
     var menuViewModel: MenuViewModel
+    var currentStreaks: [GameMode: Int]
 
     init() {
         let initialMode = GameMode.findMismatch
@@ -55,6 +56,7 @@ final class RootViewModel {
         self.findMismatchViewModel = findMismatchViewModel
         self.sortCardsViewModel = sortCardsViewModel
         self.menuViewModel = menuViewModel
+        self.currentStreaks = [:]
 
         self.timerViewModel.onCompleted = { [weak self] in
             self?.handleTimeUp()
@@ -112,6 +114,7 @@ final class RootViewModel {
         headerViewModel.updateResult(result)
         if result != .inProgress {
             timerViewModel.stop()
+            recordHighScoreIfNeeded(result: result)
         }
     }
 
@@ -119,5 +122,29 @@ final class RootViewModel {
         if gameState.result == .inProgress {
             updateResult(.timeUp)
         }
+    }
+
+    private func recordHighScoreIfNeeded(result: GameResult) {
+        let score: Int
+        switch activeMode {
+        case .findMismatch:
+            score = findMismatchViewModel.correctSelectionsCount
+        case .sortCards:
+            score = sortCardsViewModel.currentScore
+        }
+
+        var streak = currentStreaks[activeMode] ?? 0
+        if result == .won {
+            streak += 1
+        } else {
+            streak = 0
+        }
+        currentStreaks[activeMode] = streak
+
+        menuViewModel.updateHighScore(
+            for: activeMode,
+            score: score,
+            streak: streak
+        )
     }
 }

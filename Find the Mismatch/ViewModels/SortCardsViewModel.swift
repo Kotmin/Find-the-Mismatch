@@ -12,10 +12,12 @@ import Foundation
 final class SortCardsViewModel {
     let timerViewModel: TimerViewModel
     var cards: [Card]
+    var currentScore: Int
 
     init(timerViewModel: TimerViewModel) {
         self.timerViewModel = timerViewModel
         self.cards = []
+        self.currentScore = 0
         generateInitialCards()
     }
 
@@ -27,9 +29,9 @@ final class SortCardsViewModel {
 
     func generateInitialCards() {
         cards = []
+        currentScore = 0
     }
 
     func handleDrop(card: Card, into zoneCategory: Category?) {
     }
 }
-
