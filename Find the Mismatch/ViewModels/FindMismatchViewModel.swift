@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class FindMismatchViewModel {
+final class FindMismatchViewModel: GameModeRoundViewModel {
     let timerViewModel: TimerViewModel
 
     var cards: [Card]
@@ -127,7 +127,5 @@ final class FindMismatchViewModel {
         }
     }
 
-    func endRoundDueToTimeUp() {
-        isRoundActive = false
-    }
+
 }

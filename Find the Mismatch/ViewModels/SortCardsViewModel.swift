@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class SortCardsViewModel {
+final class SortCardsViewModel: GameModeRoundViewModel {
     let timerViewModel: TimerViewModel
 
     var cards: [Card]
@@ -134,7 +134,4 @@ final class SortCardsViewModel {
         }
     }
 
-    func endRoundDueToTimeUp() {
-        isRoundActive = false
-    }
 }
