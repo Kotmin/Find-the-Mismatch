@@ -27,9 +27,9 @@ final class RootViewModel {
             UserDefaults.standard.set(isShakeOnWrong, forKey: "settings_shakeOnWrong")
         }
     }
-    var isDarkModeEnabled: Bool {
+    var themeMode: ThemeMode {
         didSet {
-            UserDefaults.standard.set(isDarkModeEnabled, forKey: "settings_darkMode")
+            UserDefaults.standard.set(themeMode.rawValue, forKey: "settings_themeMode")
         }
     }
     var shakeCounter: Int
@@ -61,7 +61,8 @@ final class RootViewModel {
         let menuViewModel = MenuViewModel()
 
         let initialShake = UserDefaults.standard.object(forKey: "settings_shakeOnWrong") as? Bool ?? true
-        let initialDark = UserDefaults.standard.object(forKey: "settings_darkMode") as? Bool ?? false
+        let storedTheme = UserDefaults.standard.string(forKey: "settings_themeMode")
+        let initialTheme = ThemeMode(rawValue: storedTheme ?? "") ?? .system
 
         self.screen = .menu
         self.gameState = initialState
@@ -74,7 +75,7 @@ final class RootViewModel {
         self.currentStreaks = [:]
         self.lastRoundScore = 0
         self.isShakeOnWrong = initialShake
-        self.isDarkModeEnabled = initialDark
+        self.themeMode = initialTheme
         self.shakeCounter = 0
 
         self.timerViewModel.onCompleted = { [weak self] in

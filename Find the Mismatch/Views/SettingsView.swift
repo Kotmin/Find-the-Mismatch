@@ -22,13 +22,20 @@ struct SettingsView: View {
             .padding(.top, 24)
             .padding(.trailing)
 
-            Toggle(
-                "Dark mode",
-                isOn: Binding(
-                    get: { viewModel.isDarkModeEnabled },
-                    set: { viewModel.isDarkModeEnabled = $0 }
-                )
-            )
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Appearance")
+                    .font(.subheadline)
+
+                Picker("Appearance", selection: Binding(
+                    get: { viewModel.themeMode },
+                    set: { viewModel.themeMode = $0 }
+                )) {
+                    ForEach(ThemeMode.allCases) { mode in
+                        Text(mode.title).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
             .padding(.trailing)
 
             Spacer()

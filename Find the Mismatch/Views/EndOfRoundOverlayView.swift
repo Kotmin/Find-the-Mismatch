@@ -5,7 +5,6 @@
 //  Created by Paweł Jan Tłusty on 07/12/2025.
 //
 
-
 import SwiftUI
 
 struct EndOfRoundOverlayView: View {
@@ -23,9 +22,11 @@ struct EndOfRoundOverlayView: View {
                 Text(titleText)
                     .font(.title)
                     .bold()
+                    .foregroundColor(.primary)
 
                 Text("Score: \(score)")
                     .font(.headline)
+                    .foregroundColor(.primary)
 
                 HStack(spacing: 16) {
                     Button {
@@ -33,6 +34,10 @@ struct EndOfRoundOverlayView: View {
                     } label: {
                         Text("Main menu")
                             .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .foregroundColor(.primary)
+                            .background(Color(uiColor: .secondarySystemBackground))
+                            .cornerRadius(12)
                     }
 
                     Button {
@@ -40,6 +45,10 @@ struct EndOfRoundOverlayView: View {
                     } label: {
                         Text("Restart")
                             .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .foregroundColor(.primary)
+                            .background(Color(uiColor: .secondarySystemBackground))
+                            .cornerRadius(12)
                     }
                 }
                 .padding(.top, 8)

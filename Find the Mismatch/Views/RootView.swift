@@ -61,7 +61,7 @@ struct RootView: View {
             )
             .animation(.easeInOut(duration: 0.25), value: viewModel.shakeCounter)
         }
-        .preferredColorScheme(viewModel.isDarkModeEnabled ? .dark : nil)
+        .preferredColorScheme(colorSchemeForTheme(viewModel.themeMode))
     }
 
     private func centerTitleForCurrentScreen() -> String? {
@@ -72,6 +72,17 @@ struct RootView: View {
             return "Settings"
         case .game:
             return nil
+        }
+    }
+
+    private func colorSchemeForTheme(_ theme: ThemeMode) -> ColorScheme? {
+        switch theme {
+        case .system:
+            return nil
+        case .light:
+            return .light
+        case .dark:
+            return .dark
         }
     }
 }

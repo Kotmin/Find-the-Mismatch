@@ -27,8 +27,6 @@ struct MenuView: View {
                         title: "Sort the cards",
                         mode: .sortCards
                     )
-
-                    // Future modes can be added here
                 }
                 .padding(.horizontal)
 
@@ -50,17 +48,21 @@ struct MenuView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.headline)
+                        .foregroundColor(.primary)
                     Text("Best score: \(bestScore)")
                         .font(.subheadline)
+                        .foregroundColor(.secondary)
                     Text("Best streak: \(bestStreak)")
                         .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
+                    .foregroundColor(.secondary)
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color.gray.opacity(0.1))
+            .background(Color(uiColor: .secondarySystemBackground))
             .cornerRadius(16)
         }
     }

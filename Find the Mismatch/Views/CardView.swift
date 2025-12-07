@@ -15,6 +15,7 @@ struct CardView: View {
             assetView
             Text(card.title)
                 .font(.caption)
+                .foregroundColor(.primary)
         }
         .padding()
         .frame(minWidth: 60, minHeight: 80)
@@ -36,6 +37,7 @@ struct CardView: View {
         case .emoji(let value):
             Text(value)
                 .font(.largeTitle)
+                .foregroundColor(.primary)
         case .image(let name):
             Image(name)
                 .resizable()
@@ -50,7 +52,7 @@ struct CardView: View {
         } else if card.isHighlightedIncorrect {
             return Color.red.opacity(0.7)
         } else {
-            return Color.white
+            return Color(uiColor: .secondarySystemBackground)
         }
     }
 
