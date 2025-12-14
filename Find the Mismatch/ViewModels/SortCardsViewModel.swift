@@ -100,6 +100,9 @@ final class SortCardsViewModel: CardHighlightingRoundViewModel {
     func handleDrop(card: Card, into zoneCategory: Category?) {
         guard isRoundActive else { return }
         guard let index = cards.firstIndex(where: { $0.id == card.id }) else { return }
+        
+        let isLockedCorrect = (cards[index].assignedCategory == cards[index].category)
+        if isLockedCorrect { return }
 
         if zoneCategory == nil {
             cards[index].assignedCategory = nil
