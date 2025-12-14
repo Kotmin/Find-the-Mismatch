@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SortCardsView: View {
-    var viewModel: SortCardsViewModel
+    @Bindable var viewModel: SortCardsViewModel
 
     @State private var dragOffsets: [UUID: CGSize] = [:]
 

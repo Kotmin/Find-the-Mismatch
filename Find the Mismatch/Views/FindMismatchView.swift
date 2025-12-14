@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FindMismatchView: View {
-    var viewModel: FindMismatchViewModel
+    @Bindable var viewModel: FindMismatchViewModel
 
     var body: some View {
         GeometryReader { geometry in

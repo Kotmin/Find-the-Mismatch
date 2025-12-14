@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
-    var viewModel: RootViewModel
+    @Bindable var viewModel: RootViewModel
 
     var body: some View {
         GeometryReader { geometry in

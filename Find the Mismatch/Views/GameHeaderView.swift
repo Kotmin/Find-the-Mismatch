@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameHeaderView: View {
-    var viewModel: GameHeaderViewModel
+    @Bindable var viewModel: GameHeaderViewModel
     var showsMenuButton: Bool
     var onMenuButtonTap: (() -> Void)?
     var showsSettingsButton: Bool

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    var viewModel: RootViewModel
+    @Bindable var viewModel: RootViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {

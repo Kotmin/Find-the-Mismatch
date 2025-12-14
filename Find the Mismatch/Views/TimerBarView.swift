@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct TimerBarView: View {
-    var viewModel: TimerViewModel
+    @Bindable var viewModel: TimerViewModel
 
     @State private var blink = false
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MenuView: View {
-    var rootViewModel: RootViewModel
+    @Bindable var rootViewModel: RootViewModel
 
     var body: some View {
         ScrollView {

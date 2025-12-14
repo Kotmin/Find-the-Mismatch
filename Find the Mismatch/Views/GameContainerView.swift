@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameContainerView: View {
-    var rootViewModel: RootViewModel
+    @Bindable var rootViewModel: RootViewModel
     var size: CGSize
 
     var body: some View {
