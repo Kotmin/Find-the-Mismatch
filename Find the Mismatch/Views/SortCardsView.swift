@@ -47,11 +47,17 @@ struct SortCardsView: View {
                         zoneHeight: zoneHeight,
                         cardSize: cardSize
                     )
+                    
+                    let locked = isLockedCorrect(card)
 
-                    CardView(card: card)
-                        .frame(width: cardSize.width, height: cardSize.height)
-                        .position(position)
-                        .offset(dragOffsets[card.id] ?? .zero)
+                    Group {
+                        
+                        CardView(card: card)
+                            .frame(width: cardSize.width, height: cardSize.height)
+                            .position(position)
+                            .offset(dragOffsets[card.id] ?? .zero)
+                    }
+                        .allowsHitTesting(!locked)
                         .gesture(
                             DragGesture(minimumDistance: 0, coordinateSpace: .named("board"))
                                 .onChanged { value in
@@ -78,6 +84,11 @@ struct SortCardsView: View {
             .coordinateSpace(name: "board")
         }
     }
+    
+    private func isLockedCorrect(_ card: Card) -> Bool {
+        card.assignedCategory == card.category
+    }
+
 
     private func zoneIndexForCard(_ card: Card) -> Int {
         if let assigned = card.assignedCategory,
