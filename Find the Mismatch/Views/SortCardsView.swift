@@ -133,6 +133,7 @@ struct SortCardsView: View {
                 + CGFloat(pileIndex) * (cardSize.width + spacingX)
 
             let zoneCenterY = zoneTop + zoneHeight * 0.2
+            
             let depthOffset = cardSize.height * 0.15
             var y = zoneCenterY + CGFloat(depthIndex) * depthOffset
 
