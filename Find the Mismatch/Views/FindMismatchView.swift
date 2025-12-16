@@ -32,9 +32,10 @@ struct FindMismatchView: View {
                 mustFitHeight: mustFitHeight
             )
 
-            let spacing: CGFloat = 8
-            let horizontalPadding: CGFloat = 16
-            let verticalPadding: CGFloat = 16
+            let spacing: CGFloat = GameLayout.gridSpacing
+            let horizontalPadding: CGFloat = GameLayout.gridHorizontalPadding
+            let verticalPadding: CGFloat = GameLayout.gridVerticalPadding
+
 
             let columns = Array(
                 repeating: GridItem(.fixed(layout.cardSize.width), spacing: spacing),

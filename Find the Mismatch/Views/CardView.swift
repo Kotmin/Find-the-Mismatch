@@ -20,20 +20,19 @@ struct CardView: View {
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.6)
                 .allowsTightening(true)
-
         }
-        .padding(8)
+        .padding(GameLayout.cardInnerPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(backgroundColor)
-        .cornerRadius(12)
+        .cornerRadius(GameLayout.cardCornerRadius)
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(borderColor, lineWidth: 2)
+            RoundedRectangle(cornerRadius: GameLayout.cardCornerRadius)
+                .stroke(borderColor, lineWidth: GameLayout.cardBorderWidth)
         )
         .opacity(card.isVisible ? 1 : 0)
-        .animation(.easeInOut(duration: 0.2), value: card.isVisible)
-        .animation(.easeInOut(duration: 0.2), value: card.isHighlightedCorrect)
-        .animation(.easeInOut(duration: 0.2), value: card.isHighlightedIncorrect)
+        .animation(.easeInOut(duration: GameLayout.defaultFadeDuration), value: card.isVisible)
+        .animation(.easeInOut(duration: GameLayout.defaultFadeDuration), value: card.isHighlightedCorrect)
+        .animation(.easeInOut(duration: GameLayout.defaultFadeDuration), value: card.isHighlightedIncorrect)
     }
 
     @ViewBuilder
@@ -50,12 +49,11 @@ struct CardView: View {
         }
     }
 
-
     private var backgroundColor: Color {
         if card.isHighlightedCorrect {
-            return Color.green.opacity(0.7)
+            return Color.green.opacity(GameLayout.correctHighlightOpacity)
         } else if card.isHighlightedIncorrect {
-            return Color.red.opacity(0.7)
+            return Color.red.opacity(GameLayout.incorrectHighlightOpacity)
         } else {
             return Color(uiColor: .secondarySystemBackground)
         }
@@ -67,7 +65,7 @@ struct CardView: View {
         } else if card.isHighlightedIncorrect {
             return .red
         } else {
-            return .gray.opacity(0.4)
+            return .gray.opacity(GameLayout.defaultBorderOpacity)
         }
     }
 }
