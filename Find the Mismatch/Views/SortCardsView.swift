@@ -233,10 +233,10 @@ private extension SortCardsView {
         let isLandscape = size.width > size.height
 
         // Neutral zone (index 0) - 5 piles in landscape when many cards
-        if zoneIndex == 0, isLandscape, cardsInZone.count > GameLayout.sortNeutralPilesThreshold {
+        if zoneIndex == 0, isLandscape {
             let pileCount = min(GameLayout.sortNeutralMaxPileCount, cardsInZone.count)
-            let pileIndex = localIndex % pileCount
-            let depthIndex = localIndex / pileCount
+            let pileIndex = localIndex % max(pileCount, 1)
+            let depthIndex = localIndex / max(pileCount, 1)
 
             let spacingX: CGFloat = cardSize.width * GameLayout.sortNeutralPileSpacingXFactor
             let layoutWidth = CGFloat(pileCount) * cardSize.width
