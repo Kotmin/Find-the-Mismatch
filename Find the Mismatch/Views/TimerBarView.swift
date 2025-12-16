@@ -7,15 +7,14 @@
 
 import SwiftUI
 
-
 struct TimerBarView: View {
     @Bindable var viewModel: TimerViewModel
-
     @State private var blink = false
 
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width * viewModel.progress
+
             ZStack(alignment: .leading) {
                 Capsule()
                     .fill(Color.gray.opacity(0.2))
@@ -24,29 +23,23 @@ struct TimerBarView: View {
                     .fill(barColor)
                     .frame(width: width)
                     .opacity(barOpacity)
-                    .animation(.easeInOut(duration: 0.2), value: viewModel.progress)
-                    .animation(.easeInOut(duration: 0.4).repeatForever(autoreverses: true), value: blink)
+                    .animation(.easeInOut(duration: GameLayout.timerProgressAnimDuration), value: viewModel.progress)
+                    .animation(.easeInOut(duration: GameLayout.timerBlinkAnimDuration).repeatForever(autoreverses: true), value: blink)
             }
             .onChange(of: viewModel.progress) { _, newValue in
-                if newValue < 0.25 {
-                    blink = true
-                } else {
-                    blink = false
-                }
+                blink = newValue < GameLayout.timerWarningThreshold
             }
             .onAppear {
-                if viewModel.progress < 0.25 {
-                    blink = true
-                }
+                blink = viewModel.progress < GameLayout.timerWarningThreshold
             }
         }
     }
 
     private var barColor: Color {
         let p = viewModel.progress
-        if p > 0.4 {
+        if p > GameLayout.timerGreenThreshold {
             return .green
-        } else if p > 0.25 {
+        } else if p > GameLayout.timerYellowThreshold {
             return .yellow
         } else {
             return .red
@@ -54,8 +47,8 @@ struct TimerBarView: View {
     }
 
     private var barOpacity: Double {
-        if viewModel.progress < 0.25 && blink {
-            return 0.3
+        if viewModel.progress < GameLayout.timerWarningThreshold && blink {
+            return GameLayout.timerBlinkOpacity
         } else {
             return 1
         }
