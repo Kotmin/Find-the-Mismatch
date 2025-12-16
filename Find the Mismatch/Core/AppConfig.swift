@@ -18,10 +18,6 @@ struct AppConfig {
     static let minSortCategories: Int = 2
     static let maxSortCategories: Int = 4
 
-    static let cardMinWidth: CGFloat = 80
-    static let cardMaxWidth: CGFloat = 330
-    static let cardAspectRatio: CGFloat = 1.2
-
     static let maxFindMismatchCardsWithoutScroll: Int = 20
     
     static let maxFindMismatchCards: Int = 60

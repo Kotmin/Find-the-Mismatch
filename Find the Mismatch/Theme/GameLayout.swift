@@ -43,6 +43,18 @@ struct GameLayout {
     static let timerBlinkOpacity: Double = 0.3
     static let timerProgressAnimDuration: Double = 0.2
     static let timerBlinkAnimDuration: Double = 0.4
+    
+    
+    // MARK: - Find Mismatch
+    static let findMismatchMaxColumns: Int = 10
+    static let findMismatchFallbackColumnsCap: Int = 4
+
+    static let findMismatchDealDuration: Double = 0.18
+    static let findMismatchDealPerCardDelay: Double = 0.004
+    static let findMismatchDealMaxDelay: Double = 0.08
+    static let findMismatchDealStartScale: CGFloat = 0.94
+    static let findMismatchDealStartOpacity: Double = 0.0
+
 
     // MARK: - Sort Cards layout
 
