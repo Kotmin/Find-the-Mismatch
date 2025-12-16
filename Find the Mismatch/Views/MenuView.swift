@@ -64,20 +64,3 @@ struct MenuView: View {
         }
     }
 }
-
-
-extension GameLayout {
-    enum Menu {
-        static let screenSpacing: CGFloat = 24
-        static let titleTopPadding: CGFloat = 32
-
-        static let modesSpacing: CGFloat = 16
-        static let modesHorizontalPadding: CGFloat = 16
-
-        static let bottomSpacerMinLength: CGFloat = 32
-
-        static let rowTextSpacing: CGFloat = 4
-        static let rowCornerRadius: CGFloat = 16
-        static let rowPadding: CGFloat = 16
-    }
-}
