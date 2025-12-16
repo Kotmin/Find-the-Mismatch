@@ -12,25 +12,18 @@ struct MenuView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: GameLayout.Menu.screenSpacing) {
                 Text("Find the Mismatch?")
                     .font(.largeTitle)
-                    .padding(.top, 32)
+                    .padding(.top, GameLayout.Menu.titleTopPadding)
 
-                VStack(spacing: 16) {
-                    modeRow(
-                        title: "Find the mismatch",
-                        mode: .findMismatch
-                    )
-
-                    modeRow(
-                        title: "Sort the cards",
-                        mode: .sortCards
-                    )
+                VStack(spacing: GameLayout.Menu.modesSpacing) {
+                    modeRow(title: "Find the mismatch", mode: .findMismatch)
+                    modeRow(title: "Sort the cards", mode: .sortCards)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, GameLayout.Menu.modesHorizontalPadding)
 
-                Spacer(minLength: 32)
+                Spacer(minLength: GameLayout.Menu.bottomSpacerMinLength)
             }
             .frame(maxWidth: .infinity)
         }
@@ -45,25 +38,46 @@ struct MenuView: View {
             rootViewModel.startGame(mode: mode)
         } label: {
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: GameLayout.Menu.rowTextSpacing) {
                     Text(title)
                         .font(.headline)
                         .foregroundColor(.primary)
+
                     Text("Best score: \(bestScore)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+
                     Text("Best streak: \(bestStreak)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
+
                 Spacer()
+
                 Image(systemName: "chevron.right")
                     .foregroundColor(.secondary)
             }
-            .padding()
+            .padding(GameLayout.Menu.rowPadding)
             .frame(maxWidth: .infinity)
             .background(Color(uiColor: .secondarySystemBackground))
-            .cornerRadius(16)
+            .cornerRadius(GameLayout.Menu.rowCornerRadius)
         }
+    }
+}
+
+
+extension GameLayout {
+    enum Menu {
+        static let screenSpacing: CGFloat = 24
+        static let titleTopPadding: CGFloat = 32
+
+        static let modesSpacing: CGFloat = 16
+        static let modesHorizontalPadding: CGFloat = 16
+
+        static let bottomSpacerMinLength: CGFloat = 32
+
+        static let rowTextSpacing: CGFloat = 4
+        static let rowCornerRadius: CGFloat = 16
+        static let rowPadding: CGFloat = 16
     }
 }
