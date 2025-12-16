@@ -13,6 +13,9 @@ struct FindMismatchView: View {
     @State private var dealToken: Int = 0
     @State private var dealOn: Bool = false
 
+    // Stable per-card deal rotation (so it doesn’t change when SwiftUI re-renders)
+    @State private var dealRotationByID: [UUID: Double] = [:]
+
     var body: some View {
         GeometryReader { geometry in
             content(for: geometry.size)
@@ -22,6 +25,17 @@ struct FindMismatchView: View {
     }
 
     private func triggerDeal() {
+        var map: [UUID: Double] = [:]
+        map.reserveCapacity(viewModel.cards.count)
+
+        let max = GameLayout.findMismatchDealMaxRotationDegrees
+        for card in viewModel.cards {
+            let h = abs(card.id.uuidString.hashValue)
+            let unit = Double(h % 1000) / 1000.0
+            map[card.id] = (unit * 2.0 - 1.0) * max
+        }
+        dealRotationByID = map
+
         dealOn = false
         dealToken &+= 1
         DispatchQueue.main.async { dealOn = true }
@@ -54,13 +68,30 @@ struct FindMismatchView: View {
 
             let grid = LazyVGrid(columns: columns, spacing: spacing) {
                 ForEach(Array(viewModel.cards.enumerated()), id: \.element.id) { index, card in
-                    let delay = min(Double(index) * GameLayout.findMismatchDealPerCardDelay, GameLayout.findMismatchDealMaxDelay)
+                    let delay = min(
+                        Double(index) * GameLayout.findMismatchDealPerCardDelay,
+                        GameLayout.findMismatchDealMaxDelay
+                    )
+
+                    let rotation = dealRotationByID[card.id] ?? 0
+
+                    // Negative Y = from top; negative X = from left.
+                    let startOffset = CGSize(
+                        width: -GameLayout.findMismatchDealStartOffsetX,
+                        height: GameLayout.findMismatchDealStartOffsetY
+                    )
+
 
                     CardView(card: card)
                         .frame(width: layout.cardSize.width, height: layout.cardSize.height)
+                        .offset(dealOn ? .zero : startOffset)
                         .scaleEffect(dealOn ? 1.0 : GameLayout.findMismatchDealStartScale)
                         .opacity(dealOn ? 1.0 : GameLayout.findMismatchDealStartOpacity)
-                        .animation(.snappy(duration: GameLayout.findMismatchDealDuration).delay(delay), value: dealToken)
+                        .rotationEffect(.degrees(dealOn ? 0 : rotation))
+                        .animation(
+                            GameLayout.findMismatchDealAnimation.delay(delay),
+                            value: dealToken
+                        )
                         .onTapGesture { viewModel.handleTap(on: card) }
                 }
             }

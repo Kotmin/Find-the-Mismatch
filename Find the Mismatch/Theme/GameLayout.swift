@@ -54,6 +54,15 @@ struct GameLayout {
     static let findMismatchDealMaxDelay: Double = 0.08
     static let findMismatchDealStartScale: CGFloat = 0.94
     static let findMismatchDealStartOpacity: Double = 0.0
+    
+    static var findMismatchDealAnimation: Animation {
+        .spring(response: 0.22, dampingFraction: 0.82, blendDuration: 0.04)
+    }
+
+    static let findMismatchDealStartOffsetX: CGFloat = 18
+    static let findMismatchDealStartOffsetY: CGFloat = 28
+    static let findMismatchDealMaxRotationDegrees: Double = 8
+
 
 
     // MARK: - Sort Cards layout
