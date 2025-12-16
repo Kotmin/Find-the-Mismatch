@@ -80,6 +80,8 @@ struct EndOfRoundOverlayView: View {
             return "Time is up"
         case .inProgress:
             return ""
+        case .preparing:
+            return "Preparation"
         }
     }
 }

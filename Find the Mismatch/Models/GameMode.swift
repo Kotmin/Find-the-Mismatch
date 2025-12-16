@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum GameMode: String, CaseIterable, Codable, Hashable {
+enum GameMode: String, CaseIterable, Codable, Hashable, Identifiable {
+    var id: String { rawValue }
     case findMismatch
     case sortCards
 }

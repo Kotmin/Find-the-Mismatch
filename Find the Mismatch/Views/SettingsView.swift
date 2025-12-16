@@ -39,6 +39,25 @@ struct SettingsView: View {
             .padding(.trailing)
 
             Spacer()
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Quick manual")
+                    .font(.subheadline)
+
+                Toggle("Show quick manual for Find mismatch (next game)", isOn: Binding(
+                    get: { viewModel.showManualForFindMismatch },
+                    set: { viewModel.showManualForFindMismatch = $0 }
+                ))
+
+                Toggle("Show quick manual for Sort cards (next game)", isOn: Binding(
+                    get: { viewModel.showManualForSortCards },
+                    set: { viewModel.showManualForSortCards = $0 }
+                ))
+            }
+            .padding(.trailing)
+            
+            Spacer()
+
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

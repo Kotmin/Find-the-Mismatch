@@ -26,6 +26,21 @@ struct GameContainerView: View {
             
             contentView
         }.greenBorderPulse(trigger: rootViewModel.greenPulseCounter)
+            .sheet(item: Binding(
+                get: { rootViewModel.presentedManualMode },
+                set: { newValue in
+                    rootViewModel.presentedManualMode = newValue
+                }
+            )) { mode in
+                QuickManualView(mode: mode) {
+                    rootViewModel.confirmManualAndStartGame()
+                }
+                .interactiveDismissDisabled(true)
+            }
+
+                
+
+        
     }
 
     @ViewBuilder

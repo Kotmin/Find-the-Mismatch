@@ -73,6 +73,8 @@ final class GameHeaderViewModel {
             return "Out of hearts"
         case .timeUp:
             return "Time is up"
+        case .preparing:
+            return "Preparing..."
         }
     }
 }

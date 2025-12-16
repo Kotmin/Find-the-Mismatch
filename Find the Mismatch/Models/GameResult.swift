@@ -8,6 +8,7 @@
 import Foundation
 
 enum GameResult {
+    case preparing  
     case inProgress
     case won
     case lost

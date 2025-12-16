@@ -34,6 +34,19 @@ final class RootViewModel {
     }
     var shakeCounter: Int
     var greenPulseCounter: Int
+    
+    
+    var showManualForFindMismatch: Bool {
+        didSet { UserDefaults.standard.set(showManualForFindMismatch, forKey: "settings_showManual_findMismatch") }
+    }
+
+    var showManualForSortCards: Bool {
+        didSet { UserDefaults.standard.set(showManualForSortCards, forKey: "settings_showManual_sortCards") }
+    }
+
+    // presentation state (not persisted)
+    var presentedManualMode: GameMode? = nil
+    
 
     init() {
         let initialMode = GameMode.findMismatch
@@ -64,6 +77,14 @@ final class RootViewModel {
         let initialShake = UserDefaults.standard.object(forKey: "settings_shakeOnWrong") as? Bool ?? true
         let storedTheme = UserDefaults.standard.string(forKey: "settings_themeMode")
         let initialTheme = ThemeMode(rawValue: storedTheme ?? "") ?? .system
+        
+        let manualFind = UserDefaults.standard.object(forKey: "settings_showManual_findMismatch") as? Bool ?? false
+        let manualSort = UserDefaults.standard.object(forKey: "settings_showManual_sortCards") as? Bool ?? false
+
+        self.showManualForFindMismatch = manualFind
+        self.showManualForSortCards = manualSort
+        self.presentedManualMode = nil
+
 
         self.screen = .menu
         self.gameState = initialState
@@ -112,9 +133,11 @@ final class RootViewModel {
     }
 
     func openMenu() {
+        presentedManualMode = nil
         timerViewModel.resetToFull()
         screen = .menu
     }
+
 
     func openSettings() {
         screen = .settings
@@ -124,26 +147,67 @@ final class RootViewModel {
         activeMode = mode
         resetGame()
         screen = .game
+        
     }
 
     func switchMode(_ mode: GameMode) {
         activeMode = mode
         resetGame()
+        
     }
 
     func resetGame() {
         gameState = gameEngine.initialGameState(for: activeMode)
-        headerViewModel.update(
-            hearts: gameState.hearts,
-            maxHearts: gameState.maxHearts,
-            mode: gameState.mode,
-            result: gameState.result
-        )
+        // MARK: Manual
+        let showManual = shouldShowManual(for: activeMode)
+        
+        gameState.result = showManual ? .preparing : .inProgress
+           presentedManualMode = showManual ? activeMode : nil
+
+           headerViewModel.update(
+               hearts: gameState.hearts,
+               maxHearts: gameState.maxHearts,
+               mode: gameState.mode,
+               result: gameState.result
+           )
+
+           findMismatchViewModel.resetIfNeeded(for: activeMode)
+           sortCardsViewModel.resetIfNeeded(for: activeMode)
+
+           if showManual {
+               timerViewModel.resetToFull()
+               timerViewModel.stop()
+           } else {
+               timerViewModel.restart()
+           }
+    }
+    
+    
+    private func shouldShowManual(for mode: GameMode) -> Bool {
+        switch mode {
+        case .findMismatch: return showManualForFindMismatch
+        case .sortCards: return showManualForSortCards
+        }
+    }
+    
+    
+    func confirmManualAndStartGame() {
+        guard gameState.result == .preparing else { return }
+
+        presentedManualMode = nil
+
+        switch activeMode {
+        case .findMismatch: showManualForFindMismatch = false
+        case .sortCards: showManualForSortCards = false
+        }
+
+        gameState.result = .inProgress
+        headerViewModel.updateResult(.inProgress)
+
         timerViewModel.restart()
-        findMismatchViewModel.resetIfNeeded(for: activeMode)
-        sortCardsViewModel.resetIfNeeded(for: activeMode)
     }
 
+    
     func updateHearts(by delta: Int) {
         let newValue = max(0, gameState.hearts + delta)
         gameState.hearts = newValue
@@ -157,11 +221,18 @@ final class RootViewModel {
     func updateResult(_ result: GameResult) {
         gameState.result = result
         headerViewModel.updateResult(result)
-        if result != .inProgress {
+
+        switch result {
+        case .inProgress:
+            break
+        case .preparing:
+            timerViewModel.stop()
+        case .won, .lost, .timeUp:
             timerViewModel.stop()
             recordHighScoreIfNeeded(result: result)
         }
     }
+
 
     private func handleIncorrectSelection() {
         updateHearts(by: -1)
@@ -236,4 +307,6 @@ final class RootViewModel {
         }
         return baseScore * (1 + streak)
     }
+
 }
+
