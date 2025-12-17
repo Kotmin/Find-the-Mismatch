@@ -97,7 +97,6 @@ struct SortCardsView: View {
 
 private extension SortCardsView {
     func prepareDealingStateIfNeeded() {
-        // ensure every card has a stable deal rotation
         if dealRotationByID.count != viewModel.cards.count {
             var map: [UUID: Double] = [:]
             map.reserveCapacity(viewModel.cards.count)
