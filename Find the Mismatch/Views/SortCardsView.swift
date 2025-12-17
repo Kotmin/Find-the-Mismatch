@@ -106,8 +106,8 @@ private extension SortCardsView {
                 // use UUID hash to pick a stable angle in [-max, +max]
                 let max = GameLayout.sortDealMaxRotationDegrees
                 let h = abs(card.id.uuidString.hashValue)
-                let unit = Double(h % 1000) / 1000.0
-                let angle = (unit * 2.0 - 1.0) * max
+                let unit = Double(h % 1000) / 1000.0 // 0.0 ... 0.999
+                let angle = (unit * 2.0 - 1.0) * max // (-1.0 ... +1.0) * max
                 map[card.id] = angle
             }
             dealRotationByID = map
